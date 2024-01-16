@@ -5,6 +5,9 @@ import com.lilcodeur.school.repository.ElevesRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.aspectj.bridge.IMessage;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +15,7 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class ElevesServices {
+public class ElevesServices implements UserDetailsService {
     private ElevesRepository elevesRepository;
     private BCryptPasswordEncoder mdpEncode;
     private ValidationsServices validationsServices;
@@ -33,5 +36,15 @@ public class ElevesServices {
     }
     public void ajouter(Eleves eleves){
         elevesRepository.save(eleves);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Eleves eleves = elevesRepository.findByEmail(username);
+        if(eleves==null){
+            throw new EntityNotFoundException("email ou mot de passe incorrecte");
+        }else{
+            return eleves;
+        }
     }
 }
