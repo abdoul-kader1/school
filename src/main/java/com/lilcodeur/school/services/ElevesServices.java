@@ -39,7 +39,7 @@ public class ElevesServices implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public Eleves loadUserByUsername(String username) throws UsernameNotFoundException {
         Eleves eleves = elevesRepository.findByEmail(username);
         if(eleves==null){
             throw new EntityNotFoundException("email ou mot de passe incorrecte");
